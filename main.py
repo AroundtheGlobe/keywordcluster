@@ -19,7 +19,7 @@ sw.extend(['kun', 'nl', 'mooie', 'waar', 'ligt', 'welk', 'land', 'waar', 'staat'
 
 # Import your data to a Pandas.DataFrame
 df = pd.read_csv("202103.csv", dtype={'clicks': 'int', 'impressions': 'int', 'query': 'str'})
-df = df.groupby(['query', 'match_queries', 'category']).agg({"clicks": "sum", "impressions": "sum"}).sort_values(["impressions"], ascending=False).reset_index(drop=False)
+df = df.groupby(['query']).agg({"clicks": "sum", "impressions": "sum"}).sort_values(["impressions"], ascending=False).reset_index(drop=False)
 #df = df.drop('match_queries', 1)
 df['category'] = df.category.astype('category')
 df = df[df['impressions'] > 10]
