@@ -20,8 +20,6 @@ sw.extend(['kun', 'nl', 'mooie', 'waar', 'ligt', 'welk', 'land', 'waar', 'staat'
 # Import your data to a Pandas.DataFrame
 df = pd.read_csv("202103.csv", dtype={'clicks': 'int', 'impressions': 'int', 'query': 'str'})
 df = df.groupby(['query']).agg({"clicks": "sum", "impressions": "sum"}).sort_values(["impressions"], ascending=False).reset_index(drop=False)
-#df = df.drop('match_queries', 1)
-df['category'] = df.category.astype('category')
 df = df[df['impressions'] > 10]
 
 #df = df[:100000]
@@ -94,8 +92,8 @@ for row, col in zip(coo_matrix.row, coo_matrix.col):
     if row != col:
         add_pair_to_lookup(vals[row], vals[col])
 
-df['category_erik'] = df['query'].map(group_lookup).fillna(df['query'])
-df['token'] = df['category_erik'].apply(word_tokenize)
+df['category'] = df['query'].map(group_lookup).fillna(df['query'])
+df['token'] = df['category'].apply(word_tokenize)
 df['token'] = df['token'].apply(lambda x: [item for item in x if item not in sw])
 
 df['tokenstring'] = [' '.join(map(str, l)) for l in df['token']]
@@ -125,7 +123,7 @@ df = pd.merge(df, df_cat, left_on=["tokenstring"], right_on="cat")
 
 df.to_csv('temp.csv', encoding='utf-8-sig', index=False)
 
-df = df.groupby(['cat']).agg({"clicks": "sum", "impressions": "sum"}).sort_values(["impressions"], ascending=False).reset_index(drop=False)
+df = df.groupby(['category']).agg({"clicks": "sum", "impressions": "sum"}).sort_values(["impressions"], ascending=False).reset_index(drop=False)
 
-fig = px.scatter(df[:50], x="impressions", y="clicks", size="impressions", color="cat", hover_name="cat", log_x=True, size_max=60)
+fig = px.scatter(df[:50], x="impressions", y="clicks", size="impressions", color="category", hover_name="category", log_x=True, size_max=60)
 fig.show()
