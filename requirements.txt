@@ -1,0 +1,5 @@
+nltk
+pandas
+sklearn
+sparse_dot_topn
+plotly
