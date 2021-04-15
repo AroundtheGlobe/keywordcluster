@@ -123,8 +123,6 @@ df_cat_2 = pd.DataFrame.from_records(counts.most_common(), columns=['cat','cat_c
 df_cat = df_cat_1.append(df_cat_2)
 df = pd.merge(df, df_cat, left_on=["tokenstring"], right_on="cat")
 
-df.loc[:, 'first'] = df.token.map(lambda x: x[0])
-
 df.to_csv('temp.csv', encoding='utf-8-sig', index=False)
 
 df = df.groupby(['cat']).agg({"clicks": "sum", "impressions": "sum"}).sort_values(["impressions"], ascending=False).reset_index(drop=False)
